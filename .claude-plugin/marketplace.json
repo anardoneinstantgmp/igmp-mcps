@@ -1,0 +1,21 @@
+{
+  "name": "instantgmp",
+  "owner": {
+    "name": "InstantGMP",
+    "email": "support@instantgmp.com"
+  },
+  "metadata": {
+    "description": "InstantGMP MCP servers and usage skill for AI assistants",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "instantgmp",
+      "source": "./plugins/instantgmp",
+      "description": "InstantGMP read-only MCP servers (Inventory, Setup, Logs, EBR, QMS, Projects, Docs) plus the usage skill enforcing 21 CFR Part 11, cGMP, and GAMP 5 constraints.",
+      "version": "1.0.0",
+      "category": "manufacturing",
+      "tags": ["instantgmp", "mcp", "gmp", "21cfr11", "manufacturing", "qms"]
+    }
+  ]
+}

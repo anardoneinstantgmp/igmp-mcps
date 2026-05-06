@@ -1,0 +1,69 @@
+{
+  "mcpServers": {
+    "genexus-knowledge": {
+      "command": "C:/Program Files/KBBridge/KBeditor.exe",
+      "args": [
+        "c:/Program Files/KBBridge/resources/app/extensions/mcp-server/dist/src/index.js"
+      ],
+      "env": {
+        "ELECTRON_RUN_AS_NODE": "1"
+      }
+    },
+    "instantgmp-inventory": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/inventory/mcpinventoryserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-setup": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/setup/mcpsetupserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-logs": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/logs/mcplogsserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-ebr": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/ebr/mcpebrserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-qms": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/qms/mcpqmsserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-projects": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/projects/mcpprojectsserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    },
+    "instantgmp-docs": {
+      "type": "http",
+      "url": "${IGMP_URL}/rest/mcpservers/docs/mcpdocsserver",
+      "headers": {
+        "X-Api-User": "${IGMP_API_USER}",
+        "X-Api-Password": "${IGMP_API_PASSWORD}"
+      }
+    }
+  }
+}

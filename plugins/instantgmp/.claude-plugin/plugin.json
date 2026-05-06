@@ -1,0 +1,20 @@
+{
+  "name": "instantgmp",
+  "version": "1.0.0",
+  "description": "InstantGMP read-only MCP servers (Inventory, Setup, Logs, EBR, QMS, Projects, Docs) and the InstantGMP usage skill that enforces 21 CFR Part 11, cGMP, and GAMP 5 constraints. Each user supplies their own InstantGMP URL and API credentials via the bundled setup script.",
+  "author": {
+    "name": "InstantGMP",
+    "email": "support@instantgmp.com"
+  },
+  "homepage": "https://www.instantgmp.com",
+  "keywords": [
+    "instantgmp",
+    "mcp",
+    "gmp",
+    "21cfr11",
+    "manufacturing",
+    "qms",
+    "ebr",
+    "inventory"
+  ]
+}
