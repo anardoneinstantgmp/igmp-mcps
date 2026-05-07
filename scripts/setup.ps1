@@ -1,32 +1,33 @@
-# InstantGMP — Cowork desktop setup helper (literal-value JSON edition)
+# InstantGMP - generic Windows setup helper
 #
-# Use this on Windows after you have downloaded the InstantGMP files
-# from the GitHub repo. The script:
+# Use this on Windows to set up an MCP-compatible AI client (Claude Code,
+# Cursor, Cline, Continue, Windsurf, OpenCode, Qwen, Kimi-CLI, ...) to talk
+# to the InstantGMP MCP servers.
 #
+# What it does:
 #   1. Asks you for your InstantGMP server URL, API user, and API password.
 #   2. Probes the server to confirm it's reachable.
-#   3. Writes a ready-to-paste MCP config to:
+#   3. Sets the User-scope environment variables IGMP_URL, IGMP_API_USER,
+#      and IGMP_API_PASSWORD so any client that expands ${VAR} in its MCP
+#      config picks them up.
+#   4. Writes a ready-to-paste literal-value MCP config to:
 #         %USERPROFILE%\.instantgmp\mcp-config.json
-#      with your URL/user/password as LITERAL values (no env-var
-#      placeholders, since Cowork desktop's MCP config does not always
-#      expand them).
-#   4. Opens the file in Notepad so you can copy the JSON into
-#      Cowork → Settings → Developer (or whichever section your build
-#      exposes for MCP servers).
+#      for clients that don't expand env vars.
+#   5. Opens the file in Notepad.
 #
 # Profile management for support staff who connect to multiple servers:
 #
 #   .\setup.ps1 -Save  qa            # prompt, save as profile "qa", activate
-#   .\setup.ps1 -Use   qa            # load profile "qa" -> mcp-config.json
+#   .\setup.ps1 -Use   qa            # load profile "qa" -> mcp-config.json + env vars
 #   .\setup.ps1 -List                # show saved profiles (URL + user)
 #   .\setup.ps1 -Delete qa           # delete profile "qa"
 #
 # Profiles live at  %USERPROFILE%\.instantgmp\profiles\<name>.json
-# Passwords are DPAPI-encrypted per Windows user — only the same Windows
+# Passwords are DPAPI-encrypted per Windows user - only the same Windows
 # account on the same machine can decrypt them.
 #
-# After every change, paste the new mcp-config.json into Cowork's
-# settings (or replace the InstantGMP section) and fully restart Cowork.
+# After every change, restart your AI client so it picks up the new env vars
+# (and re-paste mcp-config.json into the client if it uses literal values).
 
 [CmdletBinding(DefaultParameterSetName = 'Interactive')]
 param(
@@ -47,6 +48,9 @@ param(
 
     [Parameter(ParameterSetName = 'Interactive')]
     [switch]$NoOpen,
+
+    [Parameter(ParameterSetName = 'Interactive')]
+    [switch]$NoEnv,
 
     [Parameter(ParameterSetName = 'Save', Mandatory)]
     [string]$Save,
@@ -89,7 +93,7 @@ function Get-ProfilePath {
 function Write-Header {
     Write-Host ""
     Write-Host "================================================================" -ForegroundColor Cyan
-    Write-Host "  InstantGMP Cowork desktop — setup helper" -ForegroundColor Cyan
+    Write-Host "  InstantGMP MCP - generic Windows setup helper" -ForegroundColor Cyan
     Write-Host "================================================================" -ForegroundColor Cyan
     Write-Host ""
 }
@@ -197,6 +201,27 @@ function Test-IgmpConnectivity {
     }
 }
 
+# -- env-var management ---------------------------------------------
+
+function Set-IgmpEnv {
+    param(
+        [Parameter(Mandatory)] [string]$BaseUrl,
+        [Parameter(Mandatory)] [string]$User,
+        [Parameter(Mandatory)] [string]$Password,
+        [string]$ProfileName = $null
+    )
+    [Environment]::SetEnvironmentVariable('IGMP_URL',          $BaseUrl,  'User')
+    [Environment]::SetEnvironmentVariable('IGMP_API_USER',     $User,     'User')
+    [Environment]::SetEnvironmentVariable('IGMP_API_PASSWORD', $Password, 'User')
+    if ($ProfileName) {
+        [Environment]::SetEnvironmentVariable('IGMP_ACTIVE_PROFILE', $ProfileName, 'User')
+    } else {
+        [Environment]::SetEnvironmentVariable('IGMP_ACTIVE_PROFILE', $null, 'User')
+    }
+    Write-Host "Set User env vars: IGMP_URL, IGMP_API_USER, IGMP_API_PASSWORD" -ForegroundColor Green
+    Write-Host "  (Restart your AI client so it picks them up.)"
+}
+
 # -- MCP config builder ---------------------------------------------
 
 function Build-McpConfig {
@@ -263,20 +288,21 @@ function Write-McpConfig {
     }
 
     Write-Host ""
-    Write-Host "Wrote MCP config to:" -ForegroundColor Green
+    Write-Host "Wrote literal-value MCP config to:" -ForegroundColor Green
     Write-Host "  $ActiveConfig"
     if ($ProfileName) {
         Write-Host "Active profile: $ProfileName" -ForegroundColor Green
     }
     Write-Host ""
-    Write-Host "Next steps in Cowork desktop:" -ForegroundColor Cyan
-    Write-Host "  1. Open Cowork -> Settings -> Developer (or wherever your build"
-    Write-Host "     exposes MCP server configuration)."
-    Write-Host "  2. Open the file above and copy its contents."
-    Write-Host "  3. Paste it into Cowork's MCP server settings, replacing any"
-    Write-Host "     previous InstantGMP section."
-    Write-Host "  4. Fully quit Cowork (close the window AND the system tray icon)"
-    Write-Host "     and reopen it so the MCP servers reload."
+    Write-Host "Next steps:" -ForegroundColor Cyan
+    Write-Host "  - For clients that expand env vars (Claude Code, Cursor, ...):"
+    Write-Host "    they should pick up the new IGMP_URL/IGMP_API_USER/IGMP_API_PASSWORD"
+    Write-Host "    automatically once you restart them."
+    Write-Host "  - For clients that need literal values (Cline, Windsurf, ...):"
+    Write-Host "    open the file above and paste its contents into the client's"
+    Write-Host "    MCP server settings, then restart the client."
+    Write-Host ""
+    Write-Host "Per-client setup notes: docs\clients\*.md"
     Write-Host ""
 }
 
@@ -347,7 +373,7 @@ function List-Profiles {
         }
     }
     Write-Host ""
-    Write-Host "  *  = profile currently written to mcp-config.json"
+    Write-Host "  *  = profile currently written to mcp-config.json + env vars"
 }
 
 function Delete-Profile {
@@ -398,6 +424,10 @@ function Run-Interactive {
         }
     }
 
+    if (-not $NoEnv) {
+        Set-IgmpEnv -BaseUrl $Url -User $ApiUser -Password $plain -ProfileName $ProfileNameToSave
+    }
+
     if ($ProfileNameToSave) {
         Save-Profile -Name $ProfileNameToSave -ProfileUrl $Url -ProfileUser $ApiUser -ProfileSecure $secure
         Write-McpConfig -BaseUrl $Url -User $ApiUser -Password $plain -ProfileName $ProfileNameToSave
@@ -431,6 +461,7 @@ switch ($PSCmdlet.ParameterSetName) {
         Write-Host "Loading profile '$($p.Name)' ..." -ForegroundColor Cyan
         $ok = Test-IgmpConnectivity -BaseUrl $p.Url -User $p.User -Password $plain
         if (-not $ok) { Write-Host "Server is not reachable, but applying profile anyway." -ForegroundColor Yellow }
+        Set-IgmpEnv -BaseUrl $p.Url -User $p.User -Password $plain -ProfileName $p.Name
         Write-McpConfig -BaseUrl $p.Url -User $p.User -Password $plain -ProfileName $p.Name
         if (-not $NoOpen) { try { Start-Process notepad.exe $ActiveConfig } catch {} }
         return

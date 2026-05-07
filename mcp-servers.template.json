@@ -1,14 +1,7 @@
 {
+  "_comment_about_this_file": "Generic MCP server configuration for InstantGMP. Drop the contents of mcpServers below into your AI client's MCP config (the location varies by client; see docs/clients/*.md). Replace ${IGMP_URL}, ${IGMP_API_USER}, and ${IGMP_API_PASSWORD} with literal values if your client does not expand environment variables. ${IGMP_URL} must NOT include a trailing slash.",
+
   "mcpServers": {
-    "genexus-knowledge": {
-      "command": "C:/Program Files/KBBridge/KBeditor.exe",
-      "args": [
-        "c:/Program Files/KBBridge/resources/app/extensions/mcp-server/dist/src/index.js"
-      ],
-      "env": {
-        "ELECTRON_RUN_AS_NODE": "1"
-      }
-    },
     "instantgmp-inventory": {
       "type": "http",
       "url": "${IGMP_URL}/rest/mcpservers/inventory/mcpinventoryserver",

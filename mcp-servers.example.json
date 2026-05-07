@@ -1,0 +1,62 @@
+{
+  "_comment_about_this_file": "Example InstantGMP MCP config with LITERAL values, for AI clients that do not expand environment variables. Replace the three REPLACE_ME values with your real InstantGMP base URL, API user, and API password. The base URL must NOT include a trailing slash.",
+
+  "mcpServers": {
+    "instantgmp-inventory": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/inventory/mcpinventoryserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-setup": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/setup/mcpsetupserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-logs": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/logs/mcplogsserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-ebr": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/ebr/mcpebrserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-qms": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/qms/mcpqmsserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-projects": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/projects/mcpprojectsserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    },
+    "instantgmp-docs": {
+      "type": "http",
+      "url": "https://REPLACE_ME.igmpapp.com/rest/mcpservers/docs/mcpdocsserver",
+      "headers": {
+        "X-Api-User": "REPLACE_ME_API_USER",
+        "X-Api-Password": "REPLACE_ME_API_PASSWORD"
+      }
+    }
+  }
+}
